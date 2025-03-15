@@ -120,6 +120,34 @@ BEGIN
           CONSTRAINT ""PK_{GetOnlyTableNameString(GetPublishedTableName())}"" PRIMARY KEY (""Id"")  
         )';  
     END IF;
+  IF NOT EXISTS (
+    SELECT 1 FROM USER_INDEXES 
+    WHERE TABLE_NAME ='{GetOnlyTableNameString(GetReceivedTableName())}' 
+    AND INDEX_NAME = 'IX_{GetOnlyTableNameString(GetReceivedTableName())}_Version_ExpiresAt_StatusName'
+  ) THEN
+    EXECUTE IMMEDIATE 'CREATE INDEX ""IX_{GetOnlyTableNameString(GetReceivedTableName())}_Version_ExpiresAt_StatusName"" ON  {GetReceivedTableName()} (""Version"", ""ExpiresAt"", ""StatusName"")';
+  END IF;  
+  IF NOT EXISTS (
+    SELECT 1 FROM USER_INDEXES 
+    WHERE TABLE_NAME ='{GetOnlyTableNameString(GetReceivedTableName())}'
+    AND INDEX_NAME = 'IX_{GetOnlyTableNameString(GetReceivedTableName())}_ExpiresAt_StatusName'
+  ) THEN
+    EXECUTE IMMEDIATE 'CREATE INDEX ""IX_{GetOnlyTableNameString(GetReceivedTableName())}_ExpiresAt_StatusName"" ON  {GetReceivedTableName()} (""ExpiresAt"", ""StatusName"")';
+  END IF;
+  IF NOT EXISTS (
+    SELECT 1 FROM USER_INDEXES 
+    WHERE TABLE_NAME ='{GetOnlyTableNameString(GetPublishedTableName())}' 
+    AND INDEX_NAME = 'IX_{GetOnlyTableNameString(GetPublishedTableName())}_Version_ExpiresAt_StatusName'
+  ) THEN
+    EXECUTE IMMEDIATE 'CREATE INDEX ""IX_{GetOnlyTableNameString(GetPublishedTableName())}_Version_ExpiresAt_StatusName"" ON  {GetPublishedTableName()} (""Version"", ""ExpiresAt"", ""StatusName"")';
+  END IF;
+  IF NOT EXISTS (
+    SELECT 1 FROM USER_INDEXES 
+    WHERE TABLE_NAME ='{GetOnlyTableNameString(GetPublishedTableName())}' 
+    AND INDEX_NAME = 'IX_{GetOnlyTableNameString(GetPublishedTableName())}_ExpiresAt_StatusName'
+  ) THEN
+    EXECUTE IMMEDIATE 'CREATE INDEX ""IX_{GetOnlyTableNameString(GetPublishedTableName())}_ExpiresAt_StatusName"" ON  {GetPublishedTableName()} (""ExpiresAt"", ""StatusName"")';
+  END IF;
     ";
             if (_capOptions.Value.UseStorageLock)
             {

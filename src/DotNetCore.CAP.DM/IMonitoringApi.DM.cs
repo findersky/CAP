@@ -220,13 +220,13 @@ WHERE ""StatusName"" = :state
         IDictionary<string, DateTime> keyMaps)
     {
         var sqlQuery = $@"
-wWITH aggr AS (
+WITH aggr AS (
   SELECT 
-    TO_CHAR(""Added"", 'yyyy-MM-dd-HH') AS ""Key"",
+    TO_CHAR(""Added"", 'yyyy-MM-dd-HH24') AS ""Key"",
     COUNT(""Id"") AS ""Count""
   FROM {tableName}
   WHERE ""StatusName"" = :statusName
-  GROUP BY TO_CHAR(""Added"", 'yyyy-MM-dd-HH')
+  GROUP BY TO_CHAR(""Added"", 'yyyy-MM-dd-HH24')
 )
 SELECT ""Key"", ""Count"" 
 FROM aggr 
