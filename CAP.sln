@@ -91,7 +91,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Dashboard.Jwt", "sam
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetCore.CAP.Dashboard.K8s", "src\DotNetCore.CAP.Dashboard.K8s\DotNetCore.CAP.Dashboard.K8s.csproj", "{48655118-CEC3-4BD9-B510-64C1195C2729}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetCore.CAP.DM", "DotNetCore.CAP.DM\DotNetCore.CAP.DM.csproj", "{2959A553-C3CB-434E-8BF2-7AAFEB3B14DF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetCore.CAP.DM", "src\DotNetCore.CAP.DM\DotNetCore.CAP.DM.csproj", "{2959A553-C3CB-434E-8BF2-7AAFEB3B14DF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
