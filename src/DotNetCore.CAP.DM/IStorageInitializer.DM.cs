@@ -27,17 +27,17 @@ namespace DotNetCore.CAP.DM
 
         public virtual string GetPublishedTableName()
         {
-            return $@"""{_options.Value.Schema.ToUpper()}"".""published""";
+            return $@"""{_options.Value.Schema}"".""published""";
         }
 
         public virtual string GetReceivedTableName()
         {
-            return $@"""{_options.Value.Schema.ToUpper()}"".""received""";
+            return $@"""{_options.Value.Schema}"".""received""";
         }
 
         public virtual string GetLockTableName()
         {
-            return $@"""{_options.Value.Schema.ToUpper()}"".""lock""";
+            return $@"""{_options.Value.Schema}"".""lock""";
         }
 
         public async Task InitializeAsync(CancellationToken cancellationToken)
