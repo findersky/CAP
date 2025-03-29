@@ -5,6 +5,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <Authors>findersky</Authors>
+    <PackageProjectUrl>https://github.com/findersky/CAP</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/findersky/CAP</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
