@@ -209,11 +209,19 @@ public class MySqlDataStorage : IDataStorage
     {
         var connection = new MySqlConnection(_options.Value.ConnectionString);
         await using var _ = connection.ConfigureAwait(false);
+
         return await connection.ExecuteNonQueryAsync(
-                $@"DELETE FROM `{table}` WHERE ExpiresAt < @timeout AND StatusName IN ('{StatusName.Succeeded}','{StatusName.Failed}') LIMIT @batchCount;",
-                null,
-                new MySqlParameter("@timeout", timeout), new MySqlParameter("@batchCount", batchCount))
-            .ConfigureAwait(false);
+            $@"DELETE FROM `{table}` 
+               WHERE Id IN (
+                   SELECT Id 
+                   FROM `{table}`
+                   WHERE ExpiresAt < @timeout 
+                   AND StatusName IN ('{StatusName.Succeeded}', '{StatusName.Failed}')
+                   LIMIT @batchCount
+               );",
+            null,
+            new MySqlParameter("@timeout", timeout), 
+            new MySqlParameter("@batchCount", batchCount)).ConfigureAwait(false);
     }
 
     public Task<IEnumerable<MediumMessage>> GetPublishedMessagesOfNeedRetry(TimeSpan lookbackSeconds)

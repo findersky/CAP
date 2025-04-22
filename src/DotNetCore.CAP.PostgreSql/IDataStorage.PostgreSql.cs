@@ -1,4 +1,4 @@
-// Copyright (c) .NET Core Community. All rights reserved.
+﻿// Copyright (c) .NET Core Community. All rights reserved.
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 using System;
@@ -207,11 +207,19 @@ public class PostgreSqlDataStorage : IDataStorage
     {
         var connection = _options.Value.CreateConnection();
         await using var _ = connection.ConfigureAwait(false);
+
         return await connection.ExecuteNonQueryAsync(
-                $"DELETE FROM {table} WHERE \"Id\" IN (SELECT \"Id\" FROM {table} WHERE \"ExpiresAt\" < @timeout AND \"StatusName\" IN ('{StatusName.Succeeded}','{StatusName.Failed}') LIMIT @batchCount);",
-                null,
-                new NpgsqlParameter("@timeout", timeout), new NpgsqlParameter("@batchCount", batchCount))
-            .ConfigureAwait(false);
+            $@"DELETE FROM {table} 
+               WHERE ""Id"" IN (
+                   SELECT ""Id"" 
+                   FROM {table} 
+                   WHERE ""ExpiresAt"" < @timeout 
+                   AND ""StatusName"" IN ('{StatusName.Succeeded}','{StatusName.Failed}')
+                   LIMIT @batchCount
+               )",
+             null,
+             new NpgsqlParameter("@timeout", timeout),
+             new NpgsqlParameter("@batchCount", batchCount)).ConfigureAwait(false);
     }
 
     public async Task<IEnumerable<MediumMessage>> GetPublishedMessagesOfNeedRetry(TimeSpan lookbackSeconds)

@@ -1,4 +1,4 @@
-// Copyright (c) .NET Core Community. All rights reserved.
+﻿// Copyright (c) .NET Core Community. All rights reserved.
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 using System;
@@ -207,10 +207,18 @@ public class SqlServerDataStorage : IDataStorage
     {
         var connection = new SqlConnection(_options.Value.ConnectionString);
         await using var _ = connection.ConfigureAwait(false);
+
         return await connection.ExecuteNonQueryAsync(
-            $"DELETE TOP (@batchCount) FROM {table} WITH (READPAST) WHERE ExpiresAt < @timeout AND StatusName IN('{StatusName.Succeeded}','{StatusName.Failed}');",
+            $@"DELETE FROM {table} 
+               WHERE Id IN (
+                   SELECT TOP (@batchCount) Id 
+                   FROM {table} WITH (READPAST)
+                   WHERE ExpiresAt < @timeout 
+                   AND StatusName IN('{StatusName.Succeeded}','{StatusName.Failed}')
+               );",
             null,
-            new SqlParameter("@timeout", timeout), new SqlParameter("@batchCount", batchCount)).ConfigureAwait(false);
+            new SqlParameter("@timeout", timeout), 
+            new SqlParameter("@batchCount", batchCount)).ConfigureAwait(false);
     }
 
     public Task<IEnumerable<MediumMessage>> GetPublishedMessagesOfNeedRetry(TimeSpan lookbackSeconds)
